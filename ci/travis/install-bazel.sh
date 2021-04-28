@@ -49,17 +49,16 @@ python="$(command -v python3 || command -v python || echo python)"
 version=3.4.0
 #"$("${python}" -s -c "import runpy, sys; runpy.run_path(sys.argv.pop(), run_name='__api__')" bazel_version "${ROOT_DIR}/../../python/setup.py")"
 if [ "${OSTYPE}" = "msys" ]; then
-  target=/usr/bin
-  #"${MINGW_DIR-/usr}/bin/bazel.exe"
+  target="${MINGW_DIR-/usr}/bin/bazel.exe"
   mkdir -p "${target%/*}"
   curl -f -s -L -R -o "${target}" "https://github.com/bazelbuild/bazel/releases/download/${version}/bazel-${version}-${platform}-${achitecture}.exe"
 else
-  target="./install.sh"
+  target="/usr/bin"
   curl -f -s -L -R -o "${target}" "https://github.com/bazelbuild/bazel/releases/download/${version}/bazel-${version}-${platform}-arm64"
   chmod +x "${target}"
   if [ "${CI-}" = true ] || [ "${arg1-}" = "--system" ]; then
     "$(command -v sudo || echo command)" "${target}" > /dev/null  # system-wide install for CI
-    #which bazel > /dev/null
+    which bazel > /dev/null
   else
     "${target}" --user > /dev/null
   fi
