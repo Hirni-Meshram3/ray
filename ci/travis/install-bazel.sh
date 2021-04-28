@@ -55,7 +55,7 @@ if [ "${OSTYPE}" = "msys" ]; then
 else
   target=/usr/bin/bazel
   sudo curl -f -s -L -R -o "${target}" "https://github.com/bazelbuild/bazel/releases/download/${version}/bazel-${version}-${platform}-arm64"
-  chmod +x "${target}"
+  sudo chmod +x "${target}"
   if [ "${CI-}" = true ] || [ "${arg1-}" = "--system" ]; then
     "$(command -v sudo || echo command)" "${target}" > /dev/null  # system-wide install for CI
     which bazel > /dev/null
