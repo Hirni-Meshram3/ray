@@ -132,6 +132,9 @@ matrix:
 
     # Build Linux wheels and jars.
     - os: linux
+      arch:
+        - amd64
+        - arm64
       env:
         # - PYTHON=3.6
         - LINUX_WHEELS=1 LINUX_JARS=1 DOCKER_BUILD_PY37=1
