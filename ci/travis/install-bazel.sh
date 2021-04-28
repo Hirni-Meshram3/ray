@@ -53,7 +53,7 @@ if [ "${OSTYPE}" = "msys" ]; then
   mkdir -p "${target%/*}"
   curl -f -s -L -R -o "${target}" "https://github.com/bazelbuild/bazel/releases/download/${version}/bazel-${version}-${platform}-${achitecture}.exe"
 else
-  target=/usr/bin/
+  target=/usr/bin/bazel
   curl -o "${target}" "https://github.com/bazelbuild/bazel/releases/download/${version}/bazel-${version}-${platform}-arm64"
   #-f -s -L -R
   chmod +x "${target}"
