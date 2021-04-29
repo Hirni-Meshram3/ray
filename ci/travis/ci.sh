@@ -285,6 +285,7 @@ _bazel_build_before_install() {
     target="//:ray_pkg"
   fi
   # NOTE: Do not add build flags here. Use .bazelrc and --config instead.
+  export PYTHON_BIN_PATH=/usr/bin/python3
   sudo bazel build "${target}"
 }
 
