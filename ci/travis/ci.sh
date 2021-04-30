@@ -259,7 +259,7 @@ install_cython_examples() {
   (
     cd "${WORKSPACE_DIR}"/doc/examples/cython
     pip install scipy
-    python setup.py install --user
+    python3 setup.py install --user
   )
 }
 
@@ -285,7 +285,7 @@ _bazel_build_before_install() {
     target="//:ray_pkg"
   fi
   # NOTE: Do not add build flags here. Use .bazelrc and --config instead.
-  export PYTHON_BIN_PATH=/usr/bin/python2
+  #export PYTHON_BIN_PATH=/usr/bin/python2
   sudo bazel build "${target}"
 }
 
