@@ -137,46 +137,46 @@ test_python() {
   if [ "${OSTYPE}" = msys ]; then
     pathsep=";"
     args+=(
-      python/ray/serve/...
-      python/ray/tests/...
-      -python/ray/serve:test_api # segfault on windows? https://github.com/ray-project/ray/issues/12541
-      -python/ray/serve:test_handle # "fatal error" (?) https://github.com/ray-project/ray/pull/13695
-      -python/ray/serve:test_backend_worker # memory error
-      -python/ray/tests:test_actor_advanced # timeout
-      -python/ray/tests:test_actor_failures # flaky
-      -python/ray/tests:test_advanced_2
-      -python/ray/tests:test_advanced_3  # test_invalid_unicode_in_worker_log() fails on Windows
-      -python/ray/tests:test_autoscaler # We don't support Autoscaler on Windows
-      -python/ray/tests:test_autoscaler_aws
-      -python/ray/tests:test_component_failures
-      -python/ray/tests:test_component_failures_3 # timeout
-      -python/ray/tests:test_basic_2  # hangs on shared cluster tests
-      -python/ray/tests:test_basic_2_client_mode
-      -python/ray/tests:test_basic_3  # timeout
-      -python/ray/tests:test_basic_3_client_mode
-      -python/ray/tests:test_cli
-      -python/ray/tests:test_client_init # timeout
-      -python/ray/tests:test_command_runner # We don't support Autoscaler on Windows
-      -python/ray/tests:test_failure
-      -python/ray/tests:test_failure_2
-      -python/ray/tests:test_gcs_fault_tolerance # flaky
-      -python/ray/tests:test_global_gc
-      -python/ray/tests:test_job
-      -python/ray/tests:test_memstat
-      -python/ray/tests:test_metrics
-      -python/ray/tests:test_metrics_agent # timeout
-      -python/ray/tests:test_multi_node
-      -python/ray/tests:test_multi_node_2
-      -python/ray/tests:test_multi_node_3
-      -python/ray/tests:test_multiprocessing  # test_connect_to_ray() fails to connect to raylet
-      -python/ray/tests:test_node_manager
-      -python/ray/tests:test_object_manager
-      -python/ray/tests:test_placement_group # timeout and OOM
-      -python/ray/tests:test_ray_init  # test_redis_port() seems to fail here, but pass in isolation
-      -python/ray/tests:test_resource_demand_scheduler
-      -python/ray/tests:test_stress  # timeout
-      -python/ray/tests:test_stress_sharded  # timeout
-      -python/ray/tests:test_k8s_operator_mock
+      python3/ray/serve/...
+      python3/ray/tests/...
+      -python3/ray/serve:test_api # segfault on windows? https://github.com/ray-project/ray/issues/12541
+      -python3/ray/serve:test_handle # "fatal error" (?) https://github.com/ray-project/ray/pull/13695
+      -python3/ray/serve:test_backend_worker # memory error
+      -python3/ray/tests:test_actor_advanced # timeout
+      -python3/ray/tests:test_actor_failures # flaky
+      -python3/ray/tests:test_advanced_2
+      -python3/ray/tests:test_advanced_3  # test_invalid_unicode_in_worker_log() fails on Windows
+      -python3/ray/tests:test_autoscaler # We don't support Autoscaler on Windows
+      -python3/ray/tests:test_autoscaler_aws
+      -python3/ray/tests:test_component_failures
+      -python3/ray/tests:test_component_failures_3 # timeout
+      -python3/ray/tests:test_basic_2  # hangs on shared cluster tests
+      -python3/ray/tests:test_basic_2_client_mode
+      -python3/ray/tests:test_basic_3  # timeout
+      -python3/ray/tests:test_basic_3_client_mode
+      -python3/ray/tests:test_cli
+      -python3/ray/tests:test_client_init # timeout
+      -python3/ray/tests:test_command_runner # We don't support Autoscaler on Windows
+      -python3/ray/tests:test_failure
+      -python3/ray/tests:test_failure_2
+      -python3/ray/tests:test_gcs_fault_tolerance # flaky
+      -python3/ray/tests:test_global_gc
+      -python3/ray/tests:test_job
+      -python3/ray/tests:test_memstat
+      -python3/ray/tests:test_metrics
+      -python3/ray/tests:test_metrics_agent # timeout
+      -python3/ray/tests:test_multi_node
+      -python3/ray/tests:test_multi_node_2
+      -python3/ray/tests:test_multi_node_3
+      -python3/ray/tests:test_multiprocessing  # test_connect_to_ray() fails to connect to raylet
+      -python3/ray/tests:test_node_manager
+      -python3/ray/tests:test_object_manager
+      -python3/ray/tests:test_placement_group # timeout and OOM
+      -python3/ray/tests:test_ray_init  # test_redis_port() seems to fail here, but pass in isolation
+      -python3/ray/tests:test_resource_demand_scheduler
+      -python3/ray/tests:test_stress  # timeout
+      -python3/ray/tests:test_stress_sharded  # timeout
+      -python3/ray/tests:test_k8s_operator_mock
     )
   fi
   if [ 0 -lt "${#args[@]}" ]; then  # Any targets to test?
@@ -285,7 +285,7 @@ _bazel_build_before_install() {
     target="//:ray_pkg"
   fi
   # NOTE: Do not add build flags here. Use .bazelrc and --config instead.
-  export PYTHON2_BIN_PATH=/usr/bin/python2.7
+  export PYTHON3_BIN_PATH=/usr/bin/python3.6
   sudo bazel build "${target}"
 }
 
