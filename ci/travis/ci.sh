@@ -286,7 +286,7 @@ _bazel_build_before_install() {
   fi
   # NOTE: Do not add build flags here. Use .bazelrc and --config instead.
   #export PYTHON3_BIN_PATH=/usr/bin/python3.6
-  sudo bazel build "${target}"
+  bazel build "${target}"
 }
 
 
