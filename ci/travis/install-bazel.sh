@@ -45,87 +45,9 @@ esac
 )
 
 export PATH=/opt/python3/cp36-cp36m/bin:$PATH
-python="$(command -v python3 || command -v python || echo python)"
-version=3.4.0
 #"$("${python}" -s -c "import runpy, sys; runpy.run_path(sys.argv.pop(), run_name='__api__')" bazel_version "${ROOT_DIR}/../../python/setup.py")"
-if [ "${OSTYPE}" = "msys" ]; then
-  target="${MINGW_DIR-/usr}/bin/bazel.exe"
-  mkdir -p "${target%/*}"
-  curl -f -s -L -R -o "${target}" "https://github.com/bazelbuild/bazel/releases/download/${version}/bazel-${version}-${platform}-${achitecture}.exe"
-else
-  target=/usr/bin/bazel
-  sudo curl -f -s -L -R -o "${target}" "https://github.com/bazelbuild/bazel/releases/download/${version}/bazel-${version}-${platform}-arm64"
-  sudo chmod +x "${target}"
-  if [ "${CI-}" = true ] || [ "${arg1-}" = "--system" ]; then
-    "$(command -v sudo || echo command)" "${target}" > /dev/null  # system-wide install for CI
-    which bazel > /dev/null
-  else
-    "${target}" --user > /dev/null
-  fi
-  #sudo rm -f "${target}"
-fi
-
-for bazel_cfg in ${BAZEL_CONFIG-}; do
-  echo "build --config=${bazel_cfg}" >> ~/.bazelrc
-done
-if [ "${TRAVIS-}" = true ]; then
-  echo "build --config=ci-travis" >> ~/.bazelrc
-
-  # If we are in Travis, most of the compilation result will be cached.
-  # This means we are I/O bounded. By default, Bazel set the number of concurrent
-  # jobs to the the number cores on the machine, which are not efficient for
-  # network bounded cache downloading workload. Therefore we increase the number
-  # of jobs to 50
-  # NOTE: Normally --jobs should be under 'build:ci-travis' in .bazelrc, but we put
-  # it under 'build' here avoid conflicts with other --config options.
-  echo "build --jobs=50" >> ~/.bazelrc
-fi
-if [ "${GITHUB_ACTIONS-}" = true ]; then
-  echo "build --config=ci-github" >> ~/.bazelrc
-fi
-if [ "${CI-}" = true ]; then
-  echo "build --config=ci" >> ~/.bazelrc
-  # If we are in master build, we can write to the cache as well.
-  upload=0
-  if [ "${TRAVIS_PULL_REQUEST-false}" = false ]; then
-    # shellcheck disable=SC2154
-    if [ -n "${BAZEL_CACHE_CREDENTIAL_B64:+x}" ]; then
-      {
-        printf "%s" "${BAZEL_CACHE_CREDENTIAL_B64}" | base64 -d - >> "${HOME}/bazel_cache_credential.json"
-      } 2>&-  # avoid printing secrets
-      upload=1
-    elif [ -n "${encrypted_1c30b31fe1ee_key:+x}" ]; then
-      {
-        # shellcheck disable=SC2154
-        openssl aes-256-cbc -K "${encrypted_1c30b31fe1ee_key}" \
-            -iv "${encrypted_1c30b31fe1ee_iv}" \
-            -in "${ROOT_DIR}/bazel_cache_credential.json.enc" \
-            -out "${HOME}/bazel_cache_credential.json" -d
-      } 2>&-  # avoid printing secrets
-      # shellcheck disable=SC2181
-      if [ 0 -eq $? ]; then
-        upload=1
-      fi
-    fi
-  fi
-  if [ 0 -ne "${upload}" ]; then
-    translated_path=~/bazel_cache_credential.json
-    if [ "${OSTYPE}" = msys ]; then  # On Windows, we need path translation
-      translated_path="$(cygpath -m -- "${translated_path}")"
-    fi
-    cat <<EOF >> ~/.bazelrc
-build --google_credentials="${translated_path}"
-EOF
-  elif [ -n "${BUILDKITE-}" ]; then
-    echo "Using buildkite secret store to communicate with cache address"
-
-    cat <<EOF >> ~/.bazelrc
-build --remote_cache=${BUILDKITE_BAZEL_CACHE_URL}
-EOF
-  else
-    echo "Using remote build cache in read-only mode." 1>&2
-    cat <<EOF >> ~/.bazelrc
-build --remote_upload_local_results=false
-EOF
-  fi
-fi
+mkdir -p ~/bin
+wget https://github.com/bazelbuild/bazel/releases/download/3.7.2/bazel-3.7.2-linux-arm64 -o ~/bin/bazel
+chmod u+x ~/bin/bazel
+echo "PATH=\$HOME/bin:\$PATH" >> ~/.bashrc
+source ~/.bashrc
