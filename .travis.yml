@@ -35,6 +35,7 @@ matrix:
       language: java
       jdk: openjdk8
       install:
+        - apt install sudo
         - . ./ci/travis/ci.sh init RAY_CI_LINUX_WHEELS_AFFECTED,RAY_CI_JAVA_AFFECTED,RAY_CI_STREAMING_JAVA_AFFECTED
       before_script:
         - . ./ci/travis/ci.sh build
