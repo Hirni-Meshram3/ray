@@ -57,7 +57,7 @@ else
   sudo chmod +x "${target}"
   if [ "${CI-}" = true ] || [ "${arg1-}" = "--system" ]; then
     "$(command -v sudo || echo command)" "${target}" > /dev/null  # system-wide install for CI
-    `which bazel` > /dev/null
+    "sudo which bazel" > /dev/null
   else
     "${target}" --user > /dev/null
   fi
