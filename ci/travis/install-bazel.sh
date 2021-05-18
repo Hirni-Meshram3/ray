@@ -52,10 +52,10 @@ if [ "${OSTYPE}" = "msys" ]; then
   mkdir -p "${target%/*}"
   curl -f -s -L -R -o "${target}" "https://github.com/bazelbuild/bazel/releases/download/${version}/bazel-${version}-${platform}-${achitecture}.exe"
 else
-  target="/usr/bin/bazel"
-  sudo mkdir -p /usr/bin/bazel
-  curl -f -s -L -R -o "${target}" "https://github.com/bazelbuild/bazel/releases/download/3.6.0/bazel-3.6.0-linux-arm64"
-  sudo chmod +x "${target}"
+  sudo mkdir -p  ~/bin
+  target="~/bin/bazel"
+  wget https://github.com/bazelbuild/bazel/releases/download/3.6.0/bazel-3.6.0-linux-arm64 -o "${target}" 
+  sudo chmod u+x "${target}"
   if [ "${CI-}" = true ] || [ "${arg1-}" = "--system" ]; then
     "$(command -v sudo || echo command)" "${target}" > /dev/null  # system-wide install for CI
     bazel info release
