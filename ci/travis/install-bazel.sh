@@ -65,7 +65,7 @@ else
   else
     "${target}" --user > /dev/null
   fi
-  sudo rm -f "${target}"
+  sudo rm -f "./install"
 fi
 
 for bazel_cfg in ${BAZEL_CONFIG-}; do
