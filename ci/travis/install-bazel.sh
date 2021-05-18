@@ -53,7 +53,7 @@ if [ "${OSTYPE}" = "msys" ]; then
   curl -f -s -L -R -o "${target}" "https://github.com/bazelbuild/bazel/releases/download/${version}/bazel-${version}-${platform}-${achitecture}.exe"
 else
   target="/usr/bin/bazel"
-  mkdir -p /usr/bin/bazel
+  sudo mkdir -p /usr/bin/bazel
   curl -f -s -L -R -o "${target}" "https://github.com/bazelbuild/bazel/releases/download/3.6.0/bazel-3.6.0-linux-arm64"
   sudo chmod +x "${target}"
   if [ "${CI-}" = true ] || [ "${arg1-}" = "--system" ]; then
