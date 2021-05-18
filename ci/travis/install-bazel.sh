@@ -61,7 +61,7 @@ else
   if [ "${CI-}" = true ] || [ "${arg1-}" = "--system" ]; then
     "$(command -v sudo || echo command)" "${target}" > /dev/null  # system-wide install for CI
     sudo bazel info release
-    which bazel > /dev/null
+    "/usr/local/bin/bazel" > /dev/null
   else
     "${target}" --user > /dev/null
   fi
