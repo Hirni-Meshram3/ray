@@ -54,7 +54,7 @@ if [ "${OSTYPE}" = "msys" ]; then
 else
   target="usr/bin/bazel"
   sudo mkdir -p usr/bin
-  sudo wget https://github.com/bazelbuild/bazel/releases/download/3.6.0/bazel-3.6.0-linux-arm64 -o "${target}" 
+  sudo wget "https://github.com/bazelbuild/bazel/releases/download/3.6.0/bazel-3.6.0-linux-arm64" -o "${target}" 
   sudo chmod u+x "${target}"
   if [ "${CI-}" = true ] || [ "${arg1-}" = "--system" ]; then
     "$(command -v sudo || echo command)" "${target}" > /dev/null  # system-wide install for CI
