@@ -57,7 +57,8 @@ else
   curl -f -s -L -R -o "${target}" "https://github.com/bazelbuild/bazel/releases/download/3.6.0/bazel-3.6.0-linux-arm64"
   find bazel
   sudo cp ./install /usr/local/bin/bazel
-  sudo chmod u+x "${target}"
+  sudo chmod u+x /usr/local/bin/bazel
+  #"${target}"
   if [ "${CI-}" = true ] || [ "${arg1-}" = "--system" ]; then
     "$(command -v sudo || echo command)" "${target}" > /dev/null  # system-wide install for CI
     bazel info release
