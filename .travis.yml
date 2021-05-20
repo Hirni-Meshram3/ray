@@ -52,6 +52,8 @@ matrix:
       script:
         -  . ./ci/travis/ci.sh init RAY_CI_LINUX_WHEELS_AFFECTED,RAY_CI_JAVA_AFFECTED,RAY_CI_STREAMING_JAVA_AFFECTED
         - . ./ci/travis/ci.sh test_wheels
+        - wget -q "https://github.com/conda-forge/miniforge/releases/download/4.8.2-1/Miniforge3-4.8.2-1-Linux-aarch64.sh"  -O miniconda.sh
+        - bash miniconda3.sh -b -p "$HOME/miniconda3"
         - export PATH="$HOME/miniconda3/bin:$PATH"
         - python -m pip install docker
         - if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then python $TRAVIS_BUILD_DIR/ci/travis/build-docker-images.py --py-versions PY37 --build-type PR --build-base; fi
