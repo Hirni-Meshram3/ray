@@ -49,7 +49,7 @@ if [[ "$platform" == "linux" ]]; then
   PY_MMS=("3.6.9"
           "3.7.6"
           "3.8.2")
-  wget --quiet "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" -O miniconda3.sh
+  wget --quiet "https://github.com/conda-forge/miniforge/releases/download/4.8.2-1/Miniforge3-4.8.2-1-Linux-aarch64.sh" -O miniconda3.sh
   "${ROOT_DIR}"/../suppress_output bash miniconda3.sh -b -p "$HOME/miniconda3"
   export PATH="$HOME/miniconda3/bin:$PATH"
 
