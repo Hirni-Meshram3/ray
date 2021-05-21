@@ -24,8 +24,18 @@ matrix:
         - LINUX_WHEELS=1 LINUX_JARS=1 DOCKER_BUILD_PY37=1
         - PYTHONWARNINGS=ignore
         - RAY_INSTALL_JAVA=1
-        - TEST_GROUP_COUNT=2
+        - TEST_GROUP_COUNT=3
         - TEST_GROUP=1
+      language: java
+      jdk: openjdk8      
+        - arch: arm64-graviton2
+      env:
+        #- PYTHON=3.7
+        - LINUX_WHEELS=1 LINUX_JARS=1 DOCKER_BUILD_PY37=1
+        - PYTHONWARNINGS=ignore
+        - RAY_INSTALL_JAVA=1
+        - TEST_GROUP_COUNT=3
+        - TEST_GROUP=2
       language: java
       jdk: openjdk8      
     - arch: arm64-graviton2
@@ -34,8 +44,8 @@ matrix:
         - LINUX_WHEELS=1 LINUX_JARS=1 DOCKER_BUILD_PY37=1
         - PYTHONWARNINGS=ignore
         - RAY_INSTALL_JAVA=1
-        - TEST_GROUP_COUNT=2
-        - TEST_GROUP=2
+        - TEST_GROUP_COUNT=3
+        - TEST_GROUP=3
       language: java
       jdk: openjdk8      
       #script: 
@@ -58,7 +68,7 @@ before_install:
 
 script:
   - . ./ci/travis/ci.sh init RAY_CI_LINUX_WHEELS_AFFECTED,RAY_CI_JAVA_AFFECTED,RAY_CI_STREAMING_JAVA_AFFECTED
-  - . ./ci/travis/ci.sh build -- -rfEX --durations=10 -n 2 $TEST_GROUP_ARGS #2>&1
+  - . ./ci/travis/ci.sh build -n 3 $TEST_GROUP_ARGS 2>&1
   - . ./ci/travis/ci.sh test_wheels
   - export PATH="$HOME/miniconda3/bin:$PATH"
   - python -m pip install docker
