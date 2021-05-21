@@ -25,7 +25,7 @@ before_install:
     git checkout -qf "${TRAVIS_COMMIT}" --
     python -u ci/remote-watch.py --skip_repo=ray-project/ray &
 
-matrix:
+jobs:
   include:
     # Build Linux wheels and jars.
     - stage: initialize
