@@ -1,5 +1,4 @@
 language: generic
-# Use Ubuntu 18.04
 #dist: bionic
 group: edge
 dist: focal
