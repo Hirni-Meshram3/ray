@@ -4,6 +4,8 @@ language: generic
 group: edge
 dist: focal
 virt: vm
+os: linux
+cache: false
 
 git:
   clone: false  # Clone manually to work around Travis issues like https://github.com/travis-ci/travis-ci/issues/6337
@@ -14,6 +16,35 @@ branches:
   except:
     - /dependabot.*/
 
+matrix:
+  include:
+    # Build Linux wheels and jars.
+    - arch: arm64-graviton2
+      env:
+        #- PYTHON=3.7
+        - LINUX_WHEELS=1 LINUX_JARS=1 DOCKER_BUILD_PY37=1
+        - PYTHONWARNINGS=ignore
+        - RAY_INSTALL_JAVA=1
+        - TEST_GROUP_COUNT=2
+        - TEST_GROUP=1
+      language: java
+      jdk: openjdk8      
+      #script: 
+       # - . ./ci/travis/ci.sh init RAY_CI_LINUX_WHEELS_AFFECTED,RAY_CI_JAVA_AFFECTED,RAY_CI_STREAMING_JAVA_AFFECTED
+        #- . ./ci/travis/ci.sh build
+    - arch: arm64-graviton2
+      env:
+        #- PYTHON=3.7
+        - LINUX_WHEELS=1 LINUX_JARS=1 DOCKER_BUILD_PY37=1
+        - PYTHONWARNINGS=ignore
+        - RAY_INSTALL_JAVA=1
+        - TEST_GROUP_COUNT=2
+        - TEST_GROUP=2
+      language: java
+      jdk: openjdk8      
+      #script: 
+       # - . ./ci/travis/ci.sh build
+       
 before_install:
   - unset -f cd  # Travis defines this on Mac for RVM, but it breaks the Mac build
   - |
@@ -24,53 +55,19 @@ before_install:
     git fetch -q -- origin "${to_fetch[@]}"
     git checkout -qf "${TRAVIS_COMMIT}" --
     python -u ci/remote-watch.py --skip_repo=ray-project/ray &
+  - |
+    if [ -n "${TEST_GROUP_COUNT}" ]; then
+        export TEST_GROUP_ARGS="--test-group-count=${TEST_GROUP_COUNT} --test-group=${TEST_GROUP} --test-group-random-seed=1234"
+    fi    
 
-jobs:
-  include:
-    # Build Linux wheels and jars.
-    - stage: init
-      os: linux
-      arch: arm64-graviton2
-      env:
-        #- PYTHON=3.7
-        - LINUX_WHEELS=1 LINUX_JARS=1 DOCKER_BUILD_PY37=1
-        - PYTHONWARNINGS=ignore
-        - RAY_INSTALL_JAVA=1
-      language: java
-      jdk: openjdk8      
-      script: 
-        - . ./ci/travis/ci.sh init RAY_CI_LINUX_WHEELS_AFFECTED,RAY_CI_JAVA_AFFECTED,RAY_CI_STREAMING_JAVA_AFFECTED
-        #- . ./ci/travis/ci.sh build
-    - stage: build
-      os: linux
-      arch: arm64-graviton2
-      env:
-        #- PYTHON=3.7
-        - LINUX_WHEELS=1 LINUX_JARS=1 DOCKER_BUILD_PY37=1
-        - PYTHONWARNINGS=ignore
-        - RAY_INSTALL_JAVA=1
-      language: java
-      jdk: openjdk8      
-      script: 
-        - . ./ci/travis/ci.sh build
-    - stage: test
-      os: linux
-      arch: arm64-graviton2
-      env:
-        #- PYTHON=3.7
-        - LINUX_WHEELS=1 LINUX_JARS=1 DOCKER_BUILD_PY37=1
-        - PYTHONWARNINGS=ignore
-        - RAY_INSTALL_JAVA=1
-      language: java
-      jdk: openjdk8      
-      script:
-        - . ./ci/travis/ci.sh test_wheels
-        - export PATH="$HOME/miniconda3/bin:$PATH"
-        - python -m pip install docker
-        - if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then python $TRAVIS_BUILD_DIR/ci/travis/build-docker-images.py --py-versions PY37 --build-type PR --build-base; fi
-        - bash ./java/build-jar-multiplatform.sh linux
-      cache: false
-      
+script:
+  - . ./ci/travis/ci.sh init RAY_CI_LINUX_WHEELS_AFFECTED,RAY_CI_JAVA_AFFECTED,RAY_CI_STREAMING_JAVA_AFFECTED
+  - . ./ci/travis/ci.sh build -n 3 $TEST_GROUP_ARGS 2>&1
+  - . ./ci/travis/ci.sh test_wheels
+  - export PATH="$HOME/miniconda3/bin:$PATH"
+  - python -m pip install docker
+  - if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then python $TRAVIS_BUILD_DIR/ci/travis/build-docker-images.py --py-versions PY37 --build-type PR --build-base; fi
+  - bash ./java/build-jar-multiplatform.sh linux
 deploy:
   - provider: s3
     edge: true # This supposedly opts in to deploy v2.
