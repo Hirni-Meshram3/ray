@@ -28,7 +28,7 @@ before_install:
 jobs:
   include:
     # Build Linux wheels and jars.
-    - stage: build
+    - stage: init
       os: linux
       arch: arm64-graviton2
       env:
