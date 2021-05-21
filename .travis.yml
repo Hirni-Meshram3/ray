@@ -40,7 +40,7 @@ matrix:
       jdk: openjdk8      
       script: 
         - . ./ci/travis/ci.sh init RAY_CI_LINUX_WHEELS_AFFECTED,RAY_CI_JAVA_AFFECTED,RAY_CI_STREAMING_JAVA_AFFECTED
-        - . ./ci/travis/ci.sh build
+        #- . ./ci/travis/ci.sh build
     - stage: build
       os: linux
       arch: arm64-graviton2
